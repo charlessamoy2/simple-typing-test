@@ -81,6 +81,8 @@ const frontEndController = (function(){
             let charInput = curr_input.split('');
             let toCheck = charInput;
 
+            characterTyped+=charInput.length;
+
             const checkSpan = quote_text.querySelector('.highlight');
             const nextWord = checkSpan.nextSibling.nextSibling;
 
@@ -124,7 +126,6 @@ const frontEndController = (function(){
             if(quote_text.previousSibling){
                 if(quote_text.previousSibling.offsetTop>225){
                     quote_text = q.previousSibling.previousSibling;
-                    console.log(quote_text);
                     this.checkToDelete(quote_text);
                 }else{
                     q.previousSibling.remove();
@@ -163,14 +164,10 @@ const controller = (function(frontEndController){
         
     }
     
-    const startGame = function(event) {
+    const startGame = function() {
         if(!gameStart){
             timer = setInterval(frontEndController.updateTimer,1000);
             gameStart = true;
-        } else{
-            if(event.data && event.data!==" "){
-                characterTyped++;
-            }
         }
     }
 
@@ -179,7 +176,8 @@ const controller = (function(frontEndController){
             if(gameState){
                 frontEndController.processCurrentText();
                 const quote_text = document.querySelector('.highlight');
-                if(quote_text.offsetTop>=337){
+                console.log(quote_text.offsetTop);
+                if(quote_text.offsetTop>300){
                     frontEndController.checkToDelete(quote_text);
                 }
             }
