@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing test</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Charles' Typing Test</h1>
+        <div class="word-list"></div>
+        <div class="inputs">
+            <div class="inputs-body">
+                <input type="text" class="text-input" placeholder="Start typing here..."/>
+                <div class="time-limit">01:00</div>
+                <button class="refresh"><i class="fas fa-redo"></i></button>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stats-body">
+                <div class="errors">
+                    <h1>Errors:</h1>
+                    <h2 class="errors-num">0</h2>
+                </div>
+                <div class="wpm">
+                    <h1>WPM:</h1>
+                    <h2 class="wpm-num">0 WPM</h2>
+                </div>
+                <div class="accuracy">
+                    <h1>Accuracy:</h1>
+                    <h2 class="accuracy-num">00.00%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="duration-div">
+            <h4>Set duration here (in seconds):</h4>
+            <input type="number" class="duration"/>
+            <button class="submit-duration">Submit</button>
+        </div>
+    </main>
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

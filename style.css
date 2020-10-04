@@ -1,0 +1,142 @@
+@import url("https://use.typekit.net/jra6xgo.css");
+
+* {
+    font-family: "Kanit", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100vh;
+}
+
+main {
+    width: 60vw;
+    height: fit-content;
+    margin: 10vh auto;
+    padding: 50px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.word-list {
+    width: 100%;
+    height: 200px;
+    font-size: 36px;
+    background-color: white;
+    border: 1px solid black;
+    margin-bottom: 20px;
+    text-align: justify;
+    padding: 15px 30px;
+    overflow: hidden;
+}
+
+.inputs, .stats {
+    background-color: rgba(41, 41, 41, 0.25);
+    padding: 10px 0;
+}
+
+.inputs-body, .stats-body {
+    width: 800px;
+    margin: auto;
+    display: flex;
+}
+
+.inputs-body>* {
+    height: 40px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.text-input {
+    width: 650px;
+    padding-left: 10px;
+    margin-right: 10px;
+}
+
+.time-limit {
+    width: 95px;
+    margin-right: 10px;
+    background-color: white;
+    text-align: center;
+    line-height: 40px;
+}
+
+.refresh {
+    width: 45px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.refresh:hover {
+    opacity: 0.8;
+}
+
+.stats {
+    margin-top: 20px;
+}
+
+.errors,.wpm,.accuracy {
+    width: 250px;
+    height: 150px;
+    background-color: white;
+    font-size: .90 rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.errors-num, .wpm-num, .accuracy-num {
+    font-weight: 400;
+}
+
+.errors, .wpm {
+    margin-right: 25px;
+}
+
+.correct_char {
+    color: green;
+}
+
+.incorrect_char {
+    color: red;
+    text-decoration: underline;
+}
+
+.disabled {
+    filter: blur(2px);
+    transition: filter 0.5s;
+}
+
+.duration-div {
+    margin-top: 20px;
+}
+
+.duration {
+    text-align: right;
+}
+
+/* To change with keyboard theme */
+.highlight {
+    background-color: goldenrod;
+}
+
+h1,h4 { 
+    color: goldenrod;
+}
+
+main {
+    background-color: rgb(95, 27, 27);
+}
+
+
+html {
+    /* background-color: black; */
+    background-image: linear-gradient(95deg, black, rgb(17, 17, 17));
+}
