@@ -1,3 +1,4 @@
+//* initial values */
 let characterTyped = 0;
 let errors = 0;
 let gameStart = false;
@@ -8,6 +9,7 @@ let timeElapsed = 0;
 let timer = null;
 let minutes,seconds;
 
+//* All classes used from HTML */
 const DOMStrings = {
     timeDisplay: ".time-limit",
     wordBox: ".word-list",
@@ -20,10 +22,14 @@ const DOMStrings = {
     durSubmit: ".submit-duration"
 };
 
+
+//* query selectors used for main controller and frontendcontroller*/
 const input_box = document.querySelector(DOMStrings.inputBox);
 const quote_text = document.querySelector(DOMStrings.wordBox);
 const durAmount = document.querySelector(DOMStrings.durText);
 
+
+//* Front End Controller */
 const frontEndController = (function(){
     const topWords = "the of to and a in is it you that he was for on are with as I his they be at one have this from or had by not word but what some we can out other were all there when up use your how said an each she which do their time if will way about many then them write would like so these her long make thing see him two has look more day could go come did number sound no most people my over know water than call first who may down side been now find any new work part take get place made live where after back little only round man year came show every good me give our under name very through just form sentence great think say help low line differ turn cause much mean before move right boy old too same tell does set three want air well also play small end put home read hand port large spell add even land here must big high such follow act why ask men change went light kind off need house picture try us again animal point mother world near build self earth father head stand own page should country found answer school grow study still learn plant cover food sun four between state keep eye never last let thought city tree cross farm hard start might story saw far sea draw left late run don't while press close night real life few north open seem together next white children begin got walk example ease paper group always music those both mark often letter until mile river car feet care second book carry took science eat room friend began idea fish mountain stop once base hear horse cut sure watch color face wood main enough plain girl usual young ready above ever red list though feel talk bird soon body dog family direct pose leave song measure door product black short numeral class wind question happen complete ship area half rock order fire south problem piece told knew pass since top whole king space heard best hour better true during hundred five remember step early hold west ground interest reach fast verb sing listen six table travel less morning ten simple several vowel toward war lay against pattern slow center love person money serve appear road map rain rule govern pull cold notice voice unit power town fine certain fly fall lead cry dark machine note wait plan figure star box noun field rest correct able pound done beauty drive stood contain front teach week final gave green oh quick develop ocean warm free minute strong special mind behind clear tail produce fact street inch multiply nothing course stay wheel full force blue object decide surface deep moon island foot system busy test record boat common gold possible plane stead dry wonder laugh thousand ago ran check game shape equate hot miss brought heat snow tire bring yes distant fill east paint language among grand ball yet wave drop heart am present heavy dance engine position arm wide sail material size vary settle speak weight general ice matter circle pair include divide syllable felt perhaps pick sudden count square reason length represent art subject region energy hunt probable bed brother egg ride cell believe fraction forest sit race window store summer train sleep prove lone leg exercise wall catch mount wish sky board joy winter sat written wild instrument kept glass grass cow job edge sign visit past soft fun bright gas weather month million bear finish happy hope flower clothe strange gone jump baby eight village meet root buy raise solve metal whether push seven paragraph third shall held hair describe cook floor either result burn hill safe cat century consider type law bit coast copy phrase silent tall sand soil roll temperature finger industry value fight lie beat excite natural view sense ear else quite broke case middle kill son lake moment scale loud spring observe child straight consonant nation dictionary milk speed method organ pay age section dress cloud surprise quiet stone tiny climb cool design poor lot experiment bottom key iron single stick flat twenty skin smile crease hole trade melody trip office receive row mouth exact symbol die least trouble shout except wrote seed tone join suggest clean break lady yard rise bad blow oil blood touch grew cent mix team wire cost lost brown wear garden equal sent choose fell fit flow fair bank collect save control decimal gentle woman captain practice separate difficult doctor please protect noon whose locate ring character insect caught period indicate radio spoke atom human history effect electric expect crop modern element hit student corner party supply bone rail imagine provide agree thus capital won't chair danger fruit rich thick soldier process operate guess necessary sharp wing create neighbor wash bat rather crowd corn compare poem string bell depend meat rub tube famous dollar stream fear sight thin triangle planet hurry chief colony clock mine tie enter major fresh search send yellow gun allow print dead spot desert suit current lift rose continue block chart hat sell success company subtract event particular deal swim term opposite wife shoe shoulder spread arrange camp invent cotton born determine quart nine truck noise level chance gather shop stretch throw shine property column molecule select wrong gray repeat require broad prepare salt nose plural anger claim continent oxygen sugar death pretty skill women season solution magnet silver thank branch match suffix especially fig afraid huge sister steel discuss forward similar guide experience score apple bought led pitch coat mass card band rope slip win dream evening condition feed tool total basic smell valley nor double seat arrive master track parent shore division sheet substance favor connect post spend chord fat glad original share station dad bread charge proper bar offer segment slave duck instant market degree populate chick dear enemy reply drink occur support speech nature range steam motion path liquid log meant quotient teeth shell neck";
 
@@ -31,13 +37,25 @@ const frontEndController = (function(){
     const wpm_text = document.querySelector(DOMStrings.wpmNum);
     const accuracy_text = document.querySelector(DOMStrings.accuracyNum);
 
+    //* finish game (stop timer, end game state, and add disabled to word list) */
     const finishGame = function(){
         gameState = false;
         clearInterval(timer);
         quote_text.classList.add('disabled');
+        updateStats();
     };
 
+    const updateStats = function(){
+        //* get stats
+        wpm = Math.round(((characterTyped/5)/timeElapsed)*60);
+        accuracy = ((characterTyped - errors)/characterTyped)*100;
+        wpm_text.textContent = wpm+" WPM";
+        accuracy_text.textContent = accuracy.toFixed(2)+"%";
+        error_text.textContent = errors;
+    }
+
     return {
+        //* update timer per section (will set interval later). if time limit 0, end game */
         updateTimer: function(){
             const timeDisplay = document.querySelector(DOMStrings.timeDisplay);
 
@@ -54,17 +72,21 @@ const frontEndController = (function(){
             }
         },
 
+        //* randomise top 1000 words, add the word list div (1 span a word). add highlight to first word to start */
         createTextBox: function() {
             const wordList = topWords.split(" ");
             let randomWords = [];
 
+            //* start word list blank */
             quote_text.innerHTML="";
 
+            //* randomise words and add to a new array */
             wordList.forEach(function(){
                 const randomNum = Math.floor(Math.random() * 1000);
                 randomWords.push(wordList[randomNum]);
             })
 
+            //* create word span, then space span per word */
             randomWords.forEach(word => {
                 const charSpan = document.createElement('span');
                 const spaceSpan = document.createElement('span');
@@ -73,30 +95,43 @@ const frontEndController = (function(){
                 quote_text.appendChild(charSpan);
                 quote_text.appendChild(spaceSpan);
             });
+
+            //* add highlight class to first word to start with */
             quote_text.querySelector('span:first-child').classList.add('highlight');
         },
 
+        //* process words inputted */
         processCurrentText: function() {
             let curr_input = input_box.value.trim();
             let charInput = curr_input.split('');
             let toCheck = charInput;
 
+            //* update characters typed based on number of characters in word input */
             characterTyped+=charInput.length+1;
 
+            //* set up to check at higlighted word and the next word (next next since there's space inbetween) */
             const checkSpan = quote_text.querySelector('.highlight');
             const nextWord = checkSpan.nextSibling.nextSibling;
 
+            //* if correct, just add correct clas to whole word, else check chars that are wrong */
             if(checkSpan.innerHTML===curr_input){
                 checkSpan.classList.add('correct_char');
                 checkSpan.classList.remove('highlight');
             }else{
+                //* separate highlighted work to per char */
                 wordChar = checkSpan.innerHTML.split('');
                 let toCheck2 = wordChar;
+
+                //* reset text content of checkSpan */
                 checkSpan.innerHTML="";
+
+                //* toCheck is the longer word, toCheck2 is the shorter one (this allows to check for missing character and too many characters) */
                 if(wordChar.length > charInput.length){
                     toCheck=wordChar;
                     toCheck2=charInput;
                 }
+
+                //* create spans for each char. If char is not equal to char of highlighted word, make incorrect.
                 toCheck.forEach((char,index) => {
                     const newSpan = document.createElement('span');
                     if(char !== toCheck2[index]){
@@ -112,17 +147,14 @@ const frontEndController = (function(){
             }
             nextWord.classList.add('highlight');
 
-            wpm = Math.round(((characterTyped/5)/timeElapsed)*60);
-            accuracy = ((characterTyped - errors)/characterTyped)*100;
-
-            wpm_text.textContent = wpm+" WPM";
-            accuracy_text.textContent = accuracy.toFixed(2)+"%";
-            error_text.textContent = errors;
+            updateStats();
         },
 
+        //* deletes top row to make sure the highlighted word is in the middle
         checkToDelete: function(q) {
             let quote_text = q;
 
+            //* use recursion to find top row and remove the entire row (offsetTop)
             if(quote_text.previousSibling){
                 if(quote_text.previousSibling.offsetTop>225){
                     quote_text = q.previousSibling.previousSibling;
@@ -135,12 +167,14 @@ const frontEndController = (function(){
             }
         },
 
+        //* set Duration based on user input */
         setDuration: function(durAmount) {
             duration = parseInt(durAmount);
             timeLimit = duration+1;
             frontEndController.updateTimer();
         },
 
+        //* clear all fields */
         clearField: function() {
             input_box.value = "";
             durAmount.value = "";
@@ -148,8 +182,10 @@ const frontEndController = (function(){
     }
 })();
 
-
+//* Global controller */
 const controller = (function(frontEndController){
+
+    //* set up all event listeners used for the app */
     const setUpEventListeners = function() {
         const input_box = document.querySelector(DOMStrings.inputBox);
         const reset_btn = document.querySelector(DOMStrings.refreshBtn);
@@ -168,6 +204,8 @@ const controller = (function(frontEndController){
         });
     }
     
+
+    //* start game when first input in input box is made */
     const startGame = function() {
         if(!gameStart){
             timer = setInterval(frontEndController.updateTimer,1000);
@@ -175,11 +213,15 @@ const controller = (function(frontEndController){
         }
     }
 
+    //* process text everytime space is pressed */
+    //* only do this when game is ongoing (gamestate = true) */
     const processText = function(event){
         if(event.code === "Space"){
             if(gameState){
                 frontEndController.processCurrentText();
                 const quote_text = document.querySelector('.highlight');
+
+                //*only delete when highlight is at last row (offsetTop) */
                 if(quote_text.offsetTop>300){
                     frontEndController.checkToDelete(quote_text);
                 }
@@ -188,6 +230,7 @@ const controller = (function(frontEndController){
         }
     }
 
+    //* restart all values */
     const restartGame = function(){
         gameStart=false;
         gameState=true;
@@ -211,6 +254,7 @@ const controller = (function(frontEndController){
         frontEndController.clearField();
     }
 
+    //* set duration of the game based on user input, restart game */
     const setDuration = function(){
         const durValue = durAmount.value;
         if(durValue){
@@ -219,6 +263,8 @@ const controller = (function(frontEndController){
         }
     }
 
+    //* initial function to start game. */
+    //* set up event listeners, create the first word list, set initial duration (60), focus on input_box
     return {
         init : function() {
             frontEndController.createTextBox();
