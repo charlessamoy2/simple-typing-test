@@ -81,7 +81,7 @@ const frontEndController = (function(){
             let charInput = curr_input.split('');
             let toCheck = charInput;
 
-            characterTyped+=charInput.length;
+            characterTyped+=charInput.length+1;
 
             const checkSpan = quote_text.querySelector('.highlight');
             const nextWord = checkSpan.nextSibling.nextSibling;
@@ -112,7 +112,7 @@ const frontEndController = (function(){
             }
             nextWord.classList.add('highlight');
 
-            wpm = Math.round((((characterTyped-errors)/5)/timeElapsed)*60);
+            wpm = Math.round(((characterTyped/5)/timeElapsed)*60);
             accuracy = ((characterTyped - errors)/characterTyped)*100;
 
             wpm_text.textContent = wpm+" WPM";
@@ -161,7 +161,11 @@ const controller = (function(frontEndController){
         reset_btn.addEventListener('click',restartGame);
 
         duration_btn.addEventListener('click',setDuration);
-        
+        durAmount.addEventListener('keydown', key => {
+            if (key.keyCode === 13) {
+                setDuration();
+            }
+        });
     }
     
     const startGame = function() {
@@ -176,7 +180,6 @@ const controller = (function(frontEndController){
             if(gameState){
                 frontEndController.processCurrentText();
                 const quote_text = document.querySelector('.highlight');
-                console.log(quote_text.offsetTop);
                 if(quote_text.offsetTop>300){
                     frontEndController.checkToDelete(quote_text);
                 }
@@ -222,6 +225,7 @@ const controller = (function(frontEndController){
             frontEndController.setDuration(60);
             setUpEventListeners();
             gameState = true;
+            input_box.focus();
         }
     }
 })(frontEndController);
